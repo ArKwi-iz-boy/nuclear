@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="my">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>၂၄/၇ လျှပ်စစ်အာမခံမှတ်ပုံတင်ခြင်း</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      background: #f4f7f6;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .registration-container {
+      background: white;
+      padding: 40px 30px;
+      border-radius: 12px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+      width: 100%;
+      max-width: 500px;
+    }
+
+    h2 {
+      text-align: center;
+      color: #002b5c;
+      margin-bottom: 30px;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    label {
+      font-weight: 500;
+      color: #333;
+    }
+
+    input, select, textarea {
+      padding: 10px 12px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    textarea {
+      resize: vertical;
+    }
+
+    button {
+      background: #00d4ff;
+      color: #002b5c;
+      padding: 12px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 1rem;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background: #0088a3;
+      color: white;
+    }
+
+    .message {
+      text-align: center;
+      margin-top: 20px;
+      font-weight: bold;
+      color: green;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="registration-container">
+    <h2>၂၄/၇ လျှပ်စစ်အာမခံမှတ်ပုံတင်ခြင်း</h2>
+    <form id="electricityForm">
+      <label for="companyName">ကုမ္ပဏီ / အဖွဲ့အစည်းအမည်</label>
+      <input type="text" id="companyName" name="companyName" placeholder="သင့်ကုမ္ပဏီအမည်ထည့်ပါ" required>
+
+      <label for="contactPerson">ဆက်သွယ်ရန်လူအမည်</label>
+      <input type="text" id="contactPerson" name="contactPerson" placeholder="ဆက်သွယ်ရန်လူအမည်ထည့်ပါ" required>
+
+      <label for="email">အီးမေးလ်လိပ်စာ</label>
+      <input type="email" id="email" name="email" placeholder="သင့်အီးမေးလ်ထည့်ပါ" required>
+
+      <label for="phone">ဖုန်းနံပါတ်</label>
+      <input type="tel" id="phone" name="phone" placeholder="ဖုန်းနံပါတ်ထည့်ပါ" required>
+
+      <label for="address">တပ်ဆင်ရန်လိပ်စာ</label>
+      <textarea id="address" name="address" rows="3" placeholder="လိပ်စာအပြည့်အစုံထည့်ပါ" required></textarea>
+
+      <label for="powerNeeded">လိုအပ်သောပါဝါ (kW)</label>
+      <input type="number" id="powerNeeded" name="powerNeeded" placeholder="ဥပမာ - 50" required>
+
+      <label for="additionalInfo">နောက်ထပ်အချက်အလက်များ (မလိုအပ်လျှင်စွန့်ပစ်နိုင်)</label>
+      <textarea id="additionalInfo" name="additionalInfo" rows="2" placeholder="အခြားတောင်းဆိုချက်များ သို့မဟုတ် အသေးစိတ်အချက်အလက်များ"></textarea>
+
+      <button type="submit">မှတ်ပုံတင်မည်</button>
+    </form>
+
+    <div class="message" id="successMessage">သင့်တောင်းဆိုချက်ကို ပေးပို့ပြီးပါပြီ!</div>
+  </div>
+
+  <script>
+    const form = document.getElementById('electricityForm');
+    const message = document.getElementById('successMessage');
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault(); 
+      message.style.display = 'block';
+      form.reset();
+
+      setTimeout(() => {
+        message.style.display = 'none';
+      }, 3000);
+    });
+  </script>
+
+</body>
+</html>
