@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="my">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Reactor IX Chatbot — Static (မြန်မာ)</title>
+
+  <style>
+    :root{--bg:#333;--card:hsl(224, 17%, 30%) none repeat scroll 0 0;--accent:#333;--muted:#94a3b8;--text:#e6eef6}
+    body{margin:0;font-family:Inter,ui-sans-serif,system-ui,Segoe UI,Roboto,'Helvetica Neue',Arial;background:#f4f7f6;color:var(--text);display:flex;align-items:center;justify-content:center;height:100vh}
+    .container{width:980px;max-width:96%;display:grid;grid-template-columns:360px 1fr;gap:20px;background-color: #002b5c;}
+    .panel{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border-radius:12px;padding:18px;box-shadow:0 6px 30px rgba(2,6,23,0.6)}
+    .brand{display:flex;align-items:center;gap:12px}
+    .logo{width:56px;height:56px;border-radius:8px;overflow:hidden;background:#333;color:#0088a3;display:flex;align-items:center;justify-content:center}
+    .logo img{width:100%;height:100%;object-fit:cover}
+    h1{font-size:18px;margin:0}
+    p.lead{color:var(--muted);margin:6px 0 14px;font-size:13px}
+    .topics{display:grid;gap:10px}
+    .topic{background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;cursor:pointer;border:1px solid rgba(255,255,255,0.02)}
+    .topic:hover{border-color:rgba(0,188,212,0.12);transform:translateY(-2px)}
+
+    /* Chat area */
+    .chat{display:flex;flex-direction:column;height:680px}
+    .messages{flex:1;overflow:auto;padding:18px;display:flex;flex-direction:column;gap:12px}
+    .msg{max-width:78%;padding:12px;border-radius:10px;line-height:1.4}
+    .msg.user{align-self:flex-end;background:linear-gradient(90deg,#04577a,#0088a3);color:white;border-bottom-right-radius:2px}
+    .msg.bot{align-self:flex-start;background:#012029;color:var(--text);border-bottom-left-radius:2px}
+    .input-bar{display:flex;gap:10px;padding:12px;border-top:1px solid rgba(255,255,255,0.02)}
+    .input-bar input{flex:1;padding:12px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:var(--text)}
+    .input-bar button{padding:10px 14px;border-radius:8px;border:none;background:#00d4ff;color:#fff;cursor:pointer;font-weight:600}
+    .meta{font-size:12px;color:var(--muted);margin-top:8px}
+
+    /* small screens */
+    @media (max-width:720px){.container{grid-template-columns:1fr;align-items:start}.chat{height:600px}}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="panel">
+      <div class="brand">
+        <div>
+          <h1>Reactor IX Chatbot</h1>
+          <p class="lead">မြန်မာနိုင်ငံအတွက် သေးငယ်သော မော်ဂျူးလာ နျူကလီးယားစက်ရုံ (SMNRs) အကြောင်း — သဘောတရား၊ အားသာချက်များ၊ လုံခြုံရေးများ ပါတဲ့ ပညာပေးစနစ်ဖြစ်ပါတယ်။</p>
+        </div>
+      </div>
+
+      <div style="margin-top:14px">
+        <h3 style="margin:0 0 8px 0;font-size:14px">အမြန်မေးမြန်းနိုင်သည့် ခေါင်းစဉ်များ</h3>
+        <div class="topics" id="topics"></div>
+      </div>
+
+      <div style="margin-top:18px">
+        <h3 style="margin:0 0 8px 0;font-size:14px">ဘယ်လိုအသုံးပြုရမလဲ?</h3>
+        <p class="meta">ခေါင်းစဉ်တစ်ခုကို နှိပ်ပြီး မေးမြန်းနိုင်ပါတယ်။ သို့မဟုတ် သင့်မေးခွန်းကို ရိုက်ထည့်ပါ။ ဒီဟာက static demo ဖြစ်လို့ အဖြေတွေဟာ ကြိုရိုက်ထားသော အကြောင်းအရာများ ဖြစ်ပါတယ်။</p>
+      </div>
+
+    </div>
+
+    <div class="panel chat">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px">
+        <strong>Reactor IX Chatbot</strong>
+        <span class="meta">Static demo • အွန်လိုင်းမလိုအပ် • ပညာပေးအကြောင်းအရာ</span>
+      </div>
+
+      <div class="messages" id="messages" aria-live="polite"></div>
+
+      <div class="input-bar">
+        <input id="userInput" placeholder="မေးချင်တာတစ်ခု ရိုက်ထည့်ပါ... သို့မဟုတ် ခေါင်းစဉ်တစ်ခုကို ရွေးပါ" />
+        <button id="sendBtn">ပို့မယ်</button>
+      </div>
+    </div>
+    <a href="indexmm.html" class="back-btn">← ပင်မစာမျက်နှာသို့ ပြန်သွားမယ်</a>
+  </div>
+
+  <script>
+    // Static content store (translated)
+    const STATIC = {
+      "What Are Small Modular Nuclear Reactors?": `သေးငယ်သော မော်ဂျူးလာ နျူကလီးယားစက်ရုံများ (SMNRs) သည် သန့်ရှင်းပြီး ယုံကြည်စိတ်ချရသော လျှပ်စစ်ဓာတ်အားကို ထုတ်ပေးနိုင်သော ခေတ်မီစွမ်းအင်စနစ်များ ဖြစ်သည်...`,
+
+      "Why Nuclear Energy Is Safe for Myanmar": `ခေတ်မီ နျူကလီးယားစနစ်များတွင် မီးအားပျက်သွားသည့်အချိန်တောင် ကိုယ့်အလိုလို လုံခြုံစနစ်တွေ လည်ပတ်စေသော Passive Systems ပါဝင်သည်...`,
+
+      "Clean Energy for the Future": `SMNRs တွင် လည်ပတ်စဉ် အာဟာရဓာတ်ငွေ မထွက်ပေါ်ပဲ သန့်ရှင်းသော စွမ်းအင်ကို ထုတ်ပေးနိုင်သည်...`,
+
+      "How SMNRs Support Daily Life": `SMNRs ထုတ်ပေးသော လျှပ်စစ်ဓာတ်အားကြောင့် ဆေးရုံ၊ ကျောင်း၊ စက်ရုံများ အလုပ်မရပ်ဘဲ တည်ငြိမ်စွာ လည်ပတ်နိုင်သည်...`,
+
+      "Nuclear Awareness & Public Education": `နျူကလီးယားစွမ်းအင်ကို လွယ်ကူစွာ နားလည်သဘောပေါက်စေရန် ပညာပေးလုပ်ဆောင်မှုများကို ပြုလုပ်နေသည်...`,
+
+      "Jobs & Opportunities in Nuclear Technology": `SMNRs ပေါ်ထွန်းလာခြင်းကြောင့် အင်ဂျင်နီယာ၊ လုံခြုံရေး၊ သဘာဝပတ်ဝန်းကျင်နှင့် နည်းပညာလုပ်ငန်းအလုပ်အကိုင်များ ပေါ်ထွန်းလာသည်...`,
+
+      "Rural Cold-Chain Breakdown": `SMNRs သည် လျှပ်စစ်မတည်ငြိမ်သော ကျေးလက်ဒေသများတွင် အချိန်မရွေး လျှပ်စစ်ထောက်ပံ့ပေးနိုင်ပြီး စိုက်ပျိုးရေး အလုပ်များကို တည်ငြိမ်စေသည်။`,
+
+      "Mining Energy Use": `စီမံကိန်းများနှင့် သံမဏိတူးဖော်ရေးလုပ်ငန်းများအတွက် SMNRs သည် ဒီဇယ်မီးစက်အစား သန့်ရှင်းသော ဝန်ဆောင်မှု ပေးစွမ်းနိုင်သည်။`,
+
+      "Industrial Growth": `SMNRs သည် စက်မှုဇုံများအတွက် တည်ငြိမ်သည့် လျှပ်စစ်ကို ပေးနိုင်ပြီး စက်ရုံအလုပ်ရပ်ဆိုင်မှုကို လျော့ချနိုင်သည်။`,
+
+      "Disaster Resilience": `SMNRs ကို မုန်တိုင်း၊ ရေကြီးမှုများကြောင့် ထိခိုက်မှုနည်းစေရန် ဒီဇိုင်ပုံစံလုပ်ဆောင်နိုင်သည်။`,
+
+      "24/7 Essential Services": `ဆေးရုံ၊ EV Charger ၊ Data Center ၊ Telecom Tower များအတွက် SMNRs သည် 24/7 လျှပ်စစ်ထောက်ပံ့ပေးနိုင်သည်။`,
+
+      "Safety Overview": `SMNRs တွင် မြေငလျင်ခံနိုင်သောဒီဇိုင်များ၊ ရေဝင်နိုင်မှုကာကွယ်စနစ်များ၊ အရေးပေါ်အေးဆေးရေး စနစ်များ ပါဝင်သည်။`,
+
+      "FAQ: Radiation Safety": `SMNRs တွင် Radiation ထွက်နိုင်မှုကို အလွန်နည်းစေထားပြီး ပုံမှန်လည်ပတ်စဉ် လူထုအတွက် အန္တရာယ်မရှိပါ။`,
+
+      "FAQ: Waste Management": `သုံးပြီးရော Fuel နှင့် Waste များကို နိုင်ငံတကာသတ်မှတ်ချက်များအတိုင်း လုံခြုံစွာ ထိန်းသိမ်းစီမံသည်။`,
+
+      "Contact": `Project မေးမြန်းလိုပါက outreach@reactorix.example (placeholder) သို့ ဆက်သွယ်ပါ။`
+    };
+
+    const TOPICS = [
+      "What Are Small Modular Nuclear Reactors?",
+      "Why Nuclear Energy Is Safe for Myanmar",
+      "Clean Energy for the Future",
+      "How SMNRs Support Daily Life",
+      "Nuclear Awareness & Public Education",
+      "Jobs & Opportunities in Nuclear Technology",
+    ];
+
+    const topicsEl = document.getElementById('topics');
+    const messagesEl = document.getElementById('messages');
+
+    function addTopicButtons(){
+      TOPICS.forEach(t=>{
+        const btn = document.createElement('div');
+        btn.className='topic';
+        btn.textContent = t;
+        btn.onclick = ()=>{
+          appendMessage('user', t);
+          respondStatic(t);
+        };
+        topicsEl.appendChild(btn);
+      });
+    }
+
+    function appendMessage(who, text){
+      const el = document.createElement('div');
+      el.className = 'msg ' + (who==='user' ? 'user' : 'bot');
+      el.textContent = text;
+      messagesEl.appendChild(el);
+      messagesEl.scrollTop = messagesEl.scrollHeight;
+    }
+
+    function respondStatic(key){
+      if(STATIC[key]){
+        setTimeout(()=>appendMessage('bot', STATIC[key]), 300);
+        return;
+      }
+
+      const q = key.toLowerCase();
+      if(q.includes('cold') || q.includes('farm') || q.includes('agri')){
+        appendMessage('bot', STATIC['Rural Cold-Chain Breakdown']);
+        return;
+      }
+      if(q.includes('mine') || q.includes('diesel')){
+        appendMessage('bot', STATIC['Mining Energy Use']);
+        return;
+      }
+      if(q.includes('disaster') || q.includes('cyclone') || q.includes('flood')){
+        appendMessage('bot', STATIC['Disaster Resilience']);
+        return;
+      }
+      if(q.includes('24') || q.includes('hospital') || q.includes('ev') || q.includes('data')){
+        appendMessage('bot', STATIC['24/7 Essential Services']);
+        return;
+      }
+
+      if(q.includes('safety') || q.includes('safe')){
+        appendMessage('bot', STATIC['Safety Overview']);
+        return;
+      }
+      if(q.includes('radiation') || q.includes('waste')){
+        appendMessage('bot', STATIC['FAQ: Radiation Safety'] + ' ' + STATIC['FAQ: Waste Management']);
+        return;
+      }
+
+      appendMessage('bot', "မင်္ဂလာပါ။ ဒီဟာက Reactor IX Static Demo ဖြစ်ပြီး SMNRs အကြောင်း ပညာပေးအချက်အလက်များ ပါဝင်ပါတယ်။ ခေါင်းစဉ်တွေကို နှိပ်ပါ သို့မဟုတ် မေးခွန်းတစ်ခု ကောက်ရေးပါ။");
+    }
+
+    document.getElementById('sendBtn').addEventListener('click', ()=>{
+      const input = document.getElementById('userInput');
+      const text = input.value.trim();
+      if(!text) return;
+      appendMessage('user', text);
+      respondStatic(text);
+      input.value = '';
+      input.focus();
+    });
+    document.getElementById('userInput').addEventListener('keydown', (e)=>{ if(e.key==='Enter'){ e.preventDefault(); document.getElementById('sendBtn').click(); } });
+
+    window.addEventListener('load', ()=>{
+      addTopicButtons();
+      appendMessage('bot', 'မင်္ဂလာပါ! မင်းရဲ့ SMNR ပညာပေးကူညီသူ Reactor IX ပါ။ ဘယ်လိုအကြောင်းအရာမဆို မေးမြန်းနိုင်ပါတယ်။');
+    });
+  </script>
+
+</body>
+</html>
